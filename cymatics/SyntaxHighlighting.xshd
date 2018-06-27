@@ -1,0 +1,195 @@
+﻿<SyntaxDefinition name="GLSL" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Comment" foreground="Green" />
+    <Color name="String" foreground="Blue" />
+    <Color name="Pragma" foreground="Red" />
+    <Color name="Directive" foreground="Gray" />
+
+    <!-- This is the main ruleset. -->
+    <RuleSet>
+      <Span color="Comment" begin="//" />
+      <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+		  <Span color="Directive" begin="#" />
+        
+      <Span color="String">
+          <Begin>"</Begin>
+          <End>"</End>
+          <RuleSet>
+              <!-- nested span for escape sequences -->
+              <Span begin="\\" end="." />
+          </RuleSet>
+      </Span>
+
+      <Keywords foreground="Yellow">
+        <Word>xy</Word>
+        <Word>yx</Word>
+        <Word>xyz</Word>
+        <Word>yxz</Word>
+        <Word>zyx</Word>
+        <Word>yzx</Word>
+        <Word>xzy</Word>
+        <Word>zxy</Word>
+        <Word>xxyz</Word>
+        <Word>yyxz</Word>
+        <Word>zzyx</Word>
+        <Word>yyzx</Word>
+        <Word>xxzy</Word>
+        <Word>zzxy</Word>
+        <Word>xyyz</Word>
+        <Word>yxxz</Word>
+        <Word>zyyx</Word>
+        <Word>yzzx</Word>
+        <Word>xzzy</Word>
+        <Word>zxxy</Word>
+        <Word>xyzz</Word>
+        <Word>yxzz</Word>
+        <Word>zyxx</Word>
+        <Word>yzxx</Word>
+        <Word>xzyy</Word>
+        <Word>zxyy</Word>
+        <Word>wxyz</Word>
+        <Word>wyxz</Word>
+        <Word>wzyx</Word>
+        <Word>wyzx</Word>
+        <Word>wxzy</Word>
+        <Word>wzxy</Word>
+        <Word>wxyz</Word>
+        <Word>wyxz</Word>
+        <Word>wzyx</Word>
+        <Word>wyzx</Word>
+        <Word>wxzy</Word>
+        <Word>wzxy</Word>
+        <Word>wxyz</Word>
+        <Word>wyxz</Word>
+        <Word>wzyx</Word>
+        <Word>wyzx</Word>
+        <Word>wxzy</Word>
+        <Word>wzxy</Word>
+      </Keywords>
+        
+      <Keywords fontWeight="bold" foreground="Blue">
+        <Word>if</Word>
+        <Word>else</Word>
+			  <Word>break</Word>
+			  <Word>for</Word>
+			  <Word>while</Word>
+			  <Word>do</Word>
+			  <Word>switch</Word>
+			  <Word>case</Word>
+			  <Word>discard</Word>
+			  <Word>return</Word>
+      </Keywords>
+		
+
+		  <Keywords fontWeight="bold" foreground="Green">
+			  <Word>vec</Word>
+			  <Word>vec2</Word>
+			  <Word>vec3</Word>
+			  <Word>vec4</Word>
+			  <Word>bvec</Word>
+			  <Word>bvec1</Word>
+			  <Word>bvec2</Word>
+			  <Word>bvec3</Word>
+			  <Word>bvec4</Word>
+			  <Word>ivec</Word>
+			  <Word>ivec1</Word>
+			  <Word>ivec2</Word>
+			  <Word>ivec3</Word>
+			  <Word>ivec4</Word>
+			  <Word>uvec</Word>
+			  <Word>uvec1</Word>
+			  <Word>uvec2</Word>
+			  <Word>uvec3</Word>
+			  <Word>uvec4</Word>
+			  <Word>dvec</Word>
+			  <Word>dvec1</Word>
+			  <Word>dvec2</Word>
+			  <Word>dvec3</Word>
+			  <Word>dvec4</Word>
+			
+			  <Word>mat2</Word>
+			  <Word>mat3</Word>
+			  <Word>mat4</Word>
+
+			  <Word>float</Word>
+			  <Word>long</Word>
+			  <Word>int</Word>
+			  <Word>false</Word>
+			  <Word>null</Word>
+			  <Word>NaN</Word>
+			  <Word>int</Word>
+			  <Word>uint</Word>
+			  <Word>double</Word>
+			  <Word>bool</Word>
+		  </Keywords>
+
+      <Keywords fontWeight="bold" foreground="Orange">
+        <Word>varying</Word>
+      </Keywords>
+        
+		  <Keywords fontWeight="bold" foreground="Red">
+			  <Word>highp</Word>
+			  <Word>lowp</Word>
+			  <Word>mediump</Word>
+			  <Word>virtual</Word>
+			  <Word>coherent</Word>
+			  <Word>volatile</Word>
+			  <Word>restrict</Word>
+			  <Word>readonly</Word>
+			  <Word>writeonly</Word>
+			  <Word>invariant</Word>
+			  <Word>out</Word>
+			  <Word>in</Word>
+			  <Word>inout</Word>
+			  <Word>uniform</Word>
+			  <Word>texture</Word>
+			  <Word>texture2d</Word>
+			  <Word>texture2D</Word>
+			  <Word>sampler</Word>
+			  <Word>sampler2d</Word>
+			  <Word>sampler2D</Word>
+			  <Word>samplerCube</Word>
+			  <Word>struct</Word>
+			  <Word>abs</Word>
+			  <Word>sin</Word>
+			  <Word>cos</Word>
+			  <Word>tan</Word>
+			  <Word>normalize</Word>
+			  <Word>max</Word>
+			  <Word>min</Word>
+			  <Word>dot</Word>
+			  <Word>pow</Word>
+			  <Word>cross</Word>
+			  <Word>inversesqrt</Word>
+			  <Word>sqrt</Word>
+			  <Word>fract</Word>
+			  <Word>step</Word>
+		  </Keywords>
+
+		  <Keywords foreground="SlateBlue">
+			  <Word>gl_VertexID</Word>
+			  <Word>gl_InstanceID</Word>
+			  <Word>gl_DrawID</Word>
+			  <Word>gl_BaseVertex</Word>
+			  <Word>gl_BaseInstance</Word>
+			  <Word>gl_Position</Word>
+			  <Word>gl_PointSize</Word>
+			  <Word>gl_ClipDistance</Word>
+			  <Word>gl_FragCoord</Word>
+			  <Word>gl_FrontFacing</Word>
+			  <Word>gl_PointCoord</Word>
+			  <Word>gl_SampleID</Word>
+			  <Word>gl_SamplePosition</Word>
+			  <Word>gl_SampleMaskIn</Word>
+			  <Word>gl_PrimitiveID</Word>
+			  <Word>gl_FragDepth</Word>
+			  <Word>gl_FragColor</Word>
+			  <Word>__FILE__</Word>
+			  <Word>__LINE__</Word>
+			  <Word>__VERSION__</Word>
+		  </Keywords>
+        <!-- Digits -->
+        <Rule foreground="Yellow">
+            \b0[xX][0-9a-fA-F]+|\b(\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+        </Rule>
+  </RuleSet>
+</SyntaxDefinition>

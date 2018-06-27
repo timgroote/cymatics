@@ -1,0 +1,34 @@
+﻿<Window x:Class="cymatics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:cymatics"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:wpf="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
+        mc:Ignorable="d"
+        Title="Cymatics" Height="350" Width="525">
+    <Grid Background="#222222">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" ></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border x:Name="GLBorder" Grid.Row="1">
+            <wpf:OpenGLControl x:Name="OpenglControl" OpenGLDraw="OpenglControl_OnOpenGLDraw" OpenGLInitialized="OpenglControl_OnOpenGLInitialized" RenderContextType="FBO" DrawFPS="True" />
+        </Border>
+
+        <avalonedit:TextEditor Grid.Row="1" Background="#44000000" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem x:Name="new_item" Header="_New" Click="new_Item_Click"></MenuItem>
+                <MenuItem x:Name="open_Item" Header="_Open" Click="open_Item_Click"></MenuItem>
+                <MenuItem x:Name="save_Item" Header="_Save" Click="save_Item_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem x:Name="exit_Item" Header="_Exit" Click="exit_Item_Click"></MenuItem>
+            </MenuItem>
+            
+        </Menu>
+
+    </Grid>
+</Window>
