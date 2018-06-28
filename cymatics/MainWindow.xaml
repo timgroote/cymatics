@@ -1,13 +1,13 @@
-﻿<Window x:Class="cymatics.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:cymatics"
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-        xmlns:wpf="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
-        mc:Ignorable="d"
-        Title="Cymatics" Height="350" Width="525">
+﻿<Controls:MetroWindow x:Class="cymatics.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                      xmlns:wpf="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
+                      Title="MainWindow"
+                      Height="600"
+                      Width="800">
+    
     <Grid Background="#222222">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" ></RowDefinition>
@@ -31,4 +31,4 @@
         </Menu>
 
     </Grid>
-</Window>
+</Controls:MetroWindow>

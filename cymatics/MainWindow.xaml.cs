@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
+using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using SharpGL;
 using SharpGL.SceneGraph;
@@ -13,7 +14,7 @@ namespace cymatics
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private OpenGL gl;
         CymaticsScene scene = new CymaticsScene();
@@ -36,6 +37,7 @@ namespace cymatics
             {
                 timer = new DispatcherTimer();
                 this.Closing += (q, args) =>
+
                 {
                     timer?.Stop();
                 };
