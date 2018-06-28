@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -24,8 +25,8 @@ namespace cymatics
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private OpenGL gl;
-        CymaticsScene scene = new CymaticsScene();
+        private OpenGL _gl;
+        CymaticsScene _scene = new CymaticsScene();
 
         private System.Windows.Threading.DispatcherTimer timer;
 
@@ -34,30 +35,45 @@ namespace cymatics
             InitializeComponent();
             LoadSyntaxHighlighting(HighlightingType.Tim);
             Editor.TextChanged += EditorOnTextChanged;
+            Editor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+            _scene.Compilation += _scene_Compilation;
+        }
 
+        private void _scene_Compilation(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(_scene.CompilationFailureText))
+            {
+                ErrorTextblock.Text = "";
+                ErrorTextblock.MaxHeight = 0;
+            }
+            else
+            {
+                ErrorTextblock.Text = _scene.CompilationFailureText;
+                ErrorTextblock.MaxHeight = 120;
+            }
+        }
 
-            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
-            RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
-            VisualBitmapScalingMode = BitmapScalingMode.NearestNeighbor;
-
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            RowIndicator.Text = Editor.TextArea.Caret.Line.ToString();
+            ColIndicator.Text = Editor.TextArea.Caret.Column.ToString();
         }
 
         private void EditorOnTextChanged(object sender, EventArgs eventArgs)
         {
             //todo : ew.
-            scene.FragmentShaderSource = Editor.Text;
+            _scene.FragmentShaderSource = Editor.Text;
 
             if (timer == null)
             {
                 timer = new DispatcherTimer();
-                this.Closing += (q, args) =>
-
+                Closing += (q, args) =>
                 {
                     timer?.Stop();
                 };
                 timer.Tick += (s, args) =>
                 {
-                    Dispatcher.Invoke(() => { scene.Initialise(gl); });
+                    Dispatcher.Invoke(() => { _scene.Initialise(_gl); });
                     timer.Stop();
                 };
             }
@@ -119,22 +135,22 @@ namespace cymatics
 
         private void OpenglControl_OnOpenGLDraw(object sender, OpenGLEventArgs args)
         {
-            scene.Draw(gl, (float)OpenglControl.ActualWidth, (float)OpenglControl.ActualHeight);
+            _scene.Draw(_gl, (float)OpenglControl.ActualWidth, (float)OpenglControl.ActualHeight);
+            FPSIndicator.Text = OpenglControl.FrameRate.ToString();
         }
 
         private void OpenglControl_OnOpenGLInitialized(object sender, OpenGLEventArgs args)
         {
-            gl = args.OpenGL;
+            _gl = args.OpenGL;
             try
             {
-                scene.Initialise(gl);
+                _scene.Initialise(_gl);
             }
             catch(Exception ex)
             {
                 Debug.WriteLine("initialise fail : " + ex.Message);
             }
             
-
             // init channel 0(image)
             //Ch0Image = new BitmapImage(new Uri(@"C:/sta.jpg"));
             //CHO_ImageBox.Source = Ch0Image;

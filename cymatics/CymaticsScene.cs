@@ -17,6 +17,8 @@ namespace cymatics
         //Texture Names Array
         private uint[] _glTextureArray = new uint[2] {0, 0};
 
+        public string CompilationFailureText = "";
+
         float resolutionX;
         float resolutionY;
 
@@ -25,6 +27,14 @@ namespace cymatics
         //  The vertex buffer array which contains the vertex and texture coords buffers.
         VertexBufferArray vertexBufferArray;
         VertexBufferArray texCoordsBufferArray;
+
+        protected virtual void OnCompilationEvent(EventArgs e)
+        {
+            EventHandler handler = Compilation;
+            handler?.Invoke(this, new EventArgs());
+        }
+
+        public event EventHandler Compilation;
 
         public string FragmentShaderSource { get; set; }
 
@@ -66,14 +76,15 @@ namespace cymatics
             }
             catch (ShaderCompilationException se)
             {
+                CompilationFailureText =
+                    $"-----------\r\n{se.Message}\r\n----------\r\n {se.CompilerOutput} \r\n {se.HelpLink}";
                 Debug.WriteLine(" shader compilation failure");
                 Debug.WriteLine(" -------------- ");
-                Debug.WriteLine(se.Message);
-                Debug.WriteLine(se.CompilerOutput);
-                Debug.WriteLine(se.HelpLink);
+                Debug.WriteLine(CompilationFailureText);
                 Debug.WriteLine(" -------------- ");
                 isValid = false;
                 _needsRefresh = false;
+                OnCompilationEvent(new EventArgs());
                 return;
             }
             catch (Exception e)
@@ -81,28 +92,30 @@ namespace cymatics
                 Debug.WriteLine(e);
                 isValid = false;
                 _needsRefresh = true;
+                OnCompilationEvent(new EventArgs());
                 return;
             }
-
+            
             //Generate Textures
-            gl.GenTextures(2, _glTextureArray);
+            //gl.GenTextures(2, _glTextureArray);
             //shaderProgram.BindAttributeLocation(gl, glTextureArray[0], "iChannel0");
             //shaderProgram.BindAttributeLocation(gl, glTextureArray[1], "iChannel1");
-            var ch0Loc = shaderProgram.GetUniformLocation(gl, "iChannel0");
-            gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
-            gl.Uniform1(ch0Loc, 0);
+            //var ch0Loc = shaderProgram.GetUniformLocation(gl, "iChannel0");
+            //gl.ActiveTexture(OpenGL.GL_TEXTURE0);
+            //gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
+            //gl.Uniform1(ch0Loc, 0);
 
-            var ch1Loc = shaderProgram.GetUniformLocation(gl, "iChannel1");
-            gl.ActiveTexture(OpenGL.GL_TEXTURE1);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
-            gl.Uniform1(ch1Loc, 1);
-            
+            //var ch1Loc = shaderProgram.GetUniformLocation(gl, "iChannel1");
+            //gl.ActiveTexture(OpenGL.GL_TEXTURE1);
+            //gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
+            //gl.Uniform1(ch1Loc, 1);
+
             //  Now create the geometry for the square.
             CreateVerticesForSquare(gl);
 
             _needsRefresh = false;
             isValid = true;
+            OnCompilationEvent(new EventArgs());
         }
 
         public bool isValid { get; set; }
@@ -140,15 +153,15 @@ namespace cymatics
             texCoordsBufferArray.Bind(gl);
 
             //Bind Textures
-            var channel0Location = shaderProgram.GetUniformLocation(gl, "iChannel0");
-            gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
-            gl.Uniform1(channel0Location, 0);
+            //var channel0Location = shaderProgram.GetUniformLocation(gl, "iChannel0");
+            //gl.ActiveTexture(OpenGL.GL_TEXTURE0);
+            //gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
+            //gl.Uniform1(channel0Location, 0);
 
-            var channel1Location = shaderProgram.GetUniformLocation(gl, "iChannel1");
-            gl.ActiveTexture(OpenGL.GL_TEXTURE1);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
-            gl.Uniform1(channel1Location, 1);
+            //var channel1Location = shaderProgram.GetUniformLocation(gl, "iChannel1");
+            //gl.ActiveTexture(OpenGL.GL_TEXTURE1);
+            //gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
+            //gl.Uniform1(channel1Location, 1);
 
             //  Draw the square.
             gl.DrawArrays(OpenGL.GL_TRIANGLES, 0, 6);
@@ -307,8 +320,7 @@ namespace cymatics
             texCoordsBufferArray = new VertexBufferArray();
             texCoordsBufferArray.Create(gl);
             texCoordsBufferArray.Bind(gl);
-
-
+            
             //  Create a vertex buffer for the vertex data.
             var vertexDataBuffer = new VertexBuffer();
             vertexDataBuffer.Create(gl);

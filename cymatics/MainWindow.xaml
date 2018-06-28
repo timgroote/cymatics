@@ -27,10 +27,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" ></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Border x:Name="GLBorder" Grid.Row="1">
-            <wpf:OpenGLControl x:Name="OpenglControl" OpenGLDraw="OpenglControl_OnOpenGLDraw" OpenGLInitialized="OpenglControl_OnOpenGLInitialized" RenderContextType="FBO" DrawFPS="True" />
+            <wpf:OpenGLControl x:Name="OpenglControl" OpenGLDraw="OpenglControl_OnOpenGLDraw" OpenGLInitialized="OpenglControl_OnOpenGLInitialized" RenderContextType="FBO" DrawFPS="False" />
         </Border>
 
         <avalonedit:TextEditor Grid.Row="1" Style="{StaticResource editorOpacity}" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
@@ -60,9 +62,27 @@
                 <MenuItem Header="_Cymatics help"></MenuItem>
                 <MenuItem Header="_About Cymatics"></MenuItem>
             </MenuItem>
-            
-            
         </Menu>
 
+        <TextBlock Grid.Row="2" x:Name="ErrorTextblock" Height="Auto" Foreground="orange" Margin="2"></TextBlock>
+        
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <Grid MinWidth="180" Margin="12,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Foreground="White" Grid.Column="0" FontFamily="Consolas">ROW : </TextBlock>
+                <TextBlock Foreground="White" Grid.Column="1" FontFamily="Consolas" x:Name="RowIndicator">0</TextBlock>
+                <TextBlock Margin="12,0,0,0"  Grid.Column="2" Foreground="White" FontFamily="Consolas">COL : </TextBlock>
+                <TextBlock Foreground="White" Grid.Column="3" FontFamily="Consolas" x:Name="ColIndicator">0</TextBlock>
+            </Grid>
+            <TextBlock Margin="12,0,0,0" Foreground="White" FontFamily="Consolas">FPS :</TextBlock>
+            
+            <TextBlock Foreground="White" FontFamily="Consolas" x:Name="FPSIndicator">0</TextBlock>
+        </StackPanel>
+        
     </Grid>
 </Controls:MetroWindow>
