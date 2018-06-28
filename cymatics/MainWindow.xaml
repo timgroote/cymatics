@@ -8,6 +8,21 @@
                       Height="600"
                       Width="800">
     
+    <Controls:MetroWindow.Resources>
+        <Style x:Key="editorOpacity" TargetType="avalonedit:TextEditor">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#99000000"></Setter>
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Background" Value="#00000000"></Setter>
+                    <Setter Property="Opacity" Value="0.2"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Controls:MetroWindow.Resources>
+    
     <Grid Background="#222222">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" ></RowDefinition>
@@ -18,7 +33,7 @@
             <wpf:OpenGLControl x:Name="OpenglControl" OpenGLDraw="OpenglControl_OnOpenGLDraw" OpenGLInitialized="OpenglControl_OnOpenGLInitialized" RenderContextType="FBO" DrawFPS="True" />
         </Border>
 
-        <avalonedit:TextEditor Grid.Row="1" Background="#44000000" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
+        <avalonedit:TextEditor Grid.Row="1" Style="{StaticResource editorOpacity}" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem x:Name="new_item" Header="_New" Click="new_Item_Click"></MenuItem>
@@ -27,6 +42,25 @@
                 <Separator></Separator>
                 <MenuItem x:Name="exit_Item" Header="_Exit" Click="exit_Item_Click"></MenuItem>
             </MenuItem>
+            <MenuItem Header="_Rendering">
+                <MenuItem x:Name="Resolution" Header="Reso_lution">
+                    <MenuItem x:Name="quarter_resolution_item" Header="_Quarter (1/4)"></MenuItem>
+                    <MenuItem x:Name="half_resolution_item" Header="_Half (1/2)"></MenuItem>
+                    <MenuItem x:Name="full_resolution_item" Header="_Full (1:1)"></MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Code">
+                <MenuItem x:Name="highlighting_item" Header="_Highlighting">
+                    <MenuItem Header="_Tim" Click="Tim_item_OnClick" x:Name="tim_item"></MenuItem>
+                    <MenuItem Header="_ShaderBuilder" Click="Shaderbuilder_item_OnClick" x:Name="shaderbuilder_item"></MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_GLSL basics"></MenuItem>
+                <MenuItem Header="_Cymatics help"></MenuItem>
+                <MenuItem Header="_About Cymatics"></MenuItem>
+            </MenuItem>
+            
             
         </Menu>
 

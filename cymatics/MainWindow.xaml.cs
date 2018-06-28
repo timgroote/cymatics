@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 using System.Xml;
 using MahApps.Metro.Controls;
@@ -11,6 +12,13 @@ using SharpGL.SceneGraph;
 
 namespace cymatics
 {
+
+    public enum HighlightingType
+    {
+        Tim,
+        ShaderBuilder
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -24,8 +32,14 @@ namespace cymatics
         public MainWindow()
         {
             InitializeComponent();
-            LoadSyntaxHighlighting();
+            LoadSyntaxHighlighting(HighlightingType.Tim);
             Editor.TextChanged += EditorOnTextChanged;
+
+
+            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
+            RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
+            VisualBitmapScalingMode = BitmapScalingMode.NearestNeighbor;
+
         }
 
         private void EditorOnTextChanged(object sender, EventArgs eventArgs)
@@ -55,9 +69,22 @@ namespace cymatics
             timer.Start();
         }
 
-        public void LoadSyntaxHighlighting()
+        public void LoadSyntaxHighlighting(HighlightingType highlighting)
         {
-            Stream xshdStream = File.OpenRead("SyntaxHighlighting.xshd");
+            Stream xshdStream;
+            switch (highlighting)
+            {
+                case HighlightingType.ShaderBuilder:
+                    xshdStream = File.OpenRead("SBSyntaxHighlighting.xshd");
+                    break;
+                case HighlightingType.Tim:
+                    xshdStream = File.OpenRead("SyntaxHighlighting.xshd");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(highlighting));
+            }
+
+            
             XmlTextReader xshdReader = new XmlTextReader(xshdStream);
             Editor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshdReader, ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);
             xshdReader.Close();
@@ -129,5 +156,14 @@ namespace cymatics
 //                ab.Update(OpenglControl.OpenGL, result);
 //            }));
 //        }
+        private void Tim_item_OnClick(object sender, RoutedEventArgs e)
+        {
+            LoadSyntaxHighlighting(HighlightingType.Tim);
+        }
+
+        private void Shaderbuilder_item_OnClick(object sender, RoutedEventArgs e)
+        {
+            LoadSyntaxHighlighting(HighlightingType.ShaderBuilder);
+        }
     }
 }
