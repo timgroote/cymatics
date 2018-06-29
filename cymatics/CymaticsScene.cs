@@ -2,9 +2,12 @@
 using System.Drawing;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using cymatics.Controls;
 using SharpGL;
 using SharpGL.Shaders;
 using SharpGL.VertexBuffers;
+using WpfGlslControl;
+using WpfOpenGlControl;
 
 
 namespace cymatics
@@ -34,15 +37,21 @@ namespace cymatics
             handler?.Invoke(this, new EventArgs());
         }
 
+        protected Boolean needsRefresh;
         public event EventHandler Compilation;
 
-        public string FragmentShaderSource { get; set; }
-
-        private bool _needsRefresh = true;
+        private string fragmentShaderSource;
+        public string FragmentShaderSource {
+            get { return fragmentShaderSource; }
+            set { fragmentShaderSource = value;
+                needsRefresh = true;
+            }
+        }
         
         //  The shader program for our vertex and fragment shader.
         private ShaderProgram shaderProgram;
 
+        public float resolutionMultiplier = 1;
 
         public CymaticsScene()
         {
@@ -58,44 +67,29 @@ namespace cymatics
         /// Initialises the scene.
         /// </summary>
         /// <param name="gl">The OpenGL instance.</param>
-        public void Initialise(OpenGL gl)
+        public void Initialise(GLSLControl gl)
         {
             time = DateTime.Now.Millisecond / 1000;
-            //  Set a blue clear colour.
-            //gl.ClearColor(0.4f, 0.6f, 0.9f, 0.0f);
+            gl.ShaderSourceCode = this.FragmentShaderSource;
 
-            //  Create the shader program.
-            var vertexShaderSource = ResourceHelper.LoadTextFromRecource("cymatics.Shaders.Main.vert");
+            gl.OnBeforeRender = delegate (WpfOpenGLControl control)
+            {
+                if (needsRefresh)
+                {
+                    Initialise(gl);
+                    if(isValid)
+                        needsRefresh = false;
+                }
 
-            try
-            {
-                shaderProgram = new ShaderProgram();
-                shaderProgram.Create(gl, vertexShaderSource, FragmentShaderSource, null);
-                shaderProgram.BindAttributeLocation(gl, AttributeIndexPosition, "position");
-                shaderProgram.AssertValid(gl);
-            }
-            catch (ShaderCompilationException se)
-            {
-                CompilationFailureText =
-                    $"-----------\r\n{se.Message}\r\n----------\r\n {se.CompilerOutput} \r\n {se.HelpLink}";
-                Debug.WriteLine(" shader compilation failure");
-                Debug.WriteLine(" -------------- ");
-                Debug.WriteLine(CompilationFailureText);
-                Debug.WriteLine(" -------------- ");
-                isValid = false;
-                _needsRefresh = false;
-                OnCompilationEvent(new EventArgs());
-                return;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                isValid = false;
-                _needsRefresh = true;
-                OnCompilationEvent(new EventArgs());
-                return;
-            }
-            
+                time += 0.1f;
+                gl.SetUniform("iGlobalTime", time);
+                resolutionX = (float)control.ActualWidth;
+                resolutionY = (float)control.ActualHeight;
+                gl.SetUniform("iResolution", resolutionX, resolutionY);
+
+                return control;
+            };
+
             //Generate Textures
             //gl.GenTextures(2, _glTextureArray);
             //shaderProgram.BindAttributeLocation(gl, glTextureArray[0], "iChannel0");
@@ -110,11 +104,8 @@ namespace cymatics
             //gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
             //gl.Uniform1(ch1Loc, 1);
 
-            //  Now create the geometry for the square.
-            CreateVerticesForSquare(gl);
-
-            _needsRefresh = false;
-            isValid = true;
+            isValid = gl.ShaderLog.Length == 0;
+            CompilationFailureText = gl.ShaderLog;
             OnCompilationEvent(new EventArgs());
         }
 
@@ -124,11 +115,8 @@ namespace cymatics
         /// Draws the scene.
         /// </summary>
         /// <param name="gl">The OpenGL instance.</param>
-        public void Draw(OpenGL gl, float inputWidth, float inputHeight)
+        public void Draw(WpfShaderControl gl, float inputWidth, float inputHeight)
         {
-            if (_needsRefresh)
-                Initialise(gl);
-
             if (!isValid)
                 return;
 
@@ -137,20 +125,23 @@ namespace cymatics
             resolutionX = inputWidth;
             resolutionY = inputHeight;
             
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
+            
+            //gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 
             //  Bind the shader
-            shaderProgram.Bind(gl);
+            //shaderProgram.Bind(gl);
             
             //pass uniforms
-            shaderProgram.SetUniform3(gl, "iResolution", resolutionX, resolutionY, 0.0f);
-            shaderProgram.SetUniform1(gl, "iGlobalTime", time);
+            gl.SetUniform("iResolution", resolutionX / resolutionMultiplier, resolutionY / resolutionMultiplier, 0.0f);
+            gl.SetUniform("iGlobalTime", time);
+//            shaderProgram.SetUniform3(gl, "iResolution", resolutionX / resolutionMultiplier, resolutionY / resolutionMultiplier, 0.0f);
+//            shaderProgram.SetUniform1(gl, "iGlobalTime", time);
 
             time += 0.1f;
 
             //  Bind the out vertex array.
-            vertexBufferArray.Bind(gl);
-            texCoordsBufferArray.Bind(gl);
+//            vertexBufferArray.Bind(gl);
+//            texCoordsBufferArray.Bind(gl);
 
             //Bind Textures
             //var channel0Location = shaderProgram.GetUniformLocation(gl, "iChannel0");
@@ -164,14 +155,14 @@ namespace cymatics
             //gl.Uniform1(channel1Location, 1);
 
             //  Draw the square.
-            gl.DrawArrays(OpenGL.GL_TRIANGLES, 0, 6);
+//            gl.DrawArrays(OpenGL.GL_TRIANGLES, 0, 6);
 
             //  Unbind our vertex array and shader.
-            vertexBufferArray.Unbind(gl);
-            texCoordsBufferArray.Unbind(gl);
-
-
-            shaderProgram.Unbind(gl);
+//            vertexBufferArray.Unbind(gl);
+//            texCoordsBufferArray.Unbind(gl);
+//
+//
+//            shaderProgram.Unbind(gl);
         }
 
         /// <summary>
@@ -262,80 +253,6 @@ namespace cymatics
             //  Set linear filtering mode.
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
-
         }
-
-
-        /// <summary>
-        /// Creates the geometry for the square, also creating the vertex buffer array.
-        /// </summary>
-        /// <param name="gl">The OpenGL instance.</param>
-        private void CreateVerticesForSquare(OpenGL gl)
-        {
-            var vertices = new float[18];
-            vertices[0] = -0.5f;
-            vertices[1] = -0.5f;
-            vertices[2] = 0.0f; // Bottom left corner  
-
-            vertices[3] = -0.5f;
-            vertices[4] = .5f;
-            vertices[5] = 0.0f; // Top left corner  
-
-            vertices[6] = .5f;
-            vertices[7] = .5f;
-            vertices[8] = 0.0f; // Top Right corner  
-
-            vertices[9] = .5f;
-            vertices[10] = -.5f;
-            vertices[11] = 0.0f; // Bottom right corner  
-
-            vertices[12] = -.5f;
-            vertices[13] = -.5f;
-            vertices[14] = 0.0f; // Bottom left corner  
-
-            vertices[15] = .5f;
-            vertices[16] = .5f;
-            vertices[17] = 0.0f; // Top Right corner   
-
-
-            var texcoords = new float[12];
-            texcoords[0] = -1.0f;
-            texcoords[1] = -1.0f;
-            texcoords[2] = -1.0f;
-            texcoords[3] = 1.0f;
-            texcoords[4] = 1.0f;
-            texcoords[5] = 1.0f;
-            texcoords[6] = 1.0f;
-            texcoords[7] = -1.0f;
-            texcoords[8] = -1.0f;
-            texcoords[9] = -1.0f;
-            texcoords[10] = 1.0f;
-            texcoords[11] = 1.0f;
-
-            //  Create the vertex array object.
-            vertexBufferArray = new VertexBufferArray();
-            vertexBufferArray.Create(gl);
-            vertexBufferArray.Bind(gl);
-
-            texCoordsBufferArray = new VertexBufferArray();
-            texCoordsBufferArray.Create(gl);
-            texCoordsBufferArray.Bind(gl);
-            
-            //  Create a vertex buffer for the vertex data.
-            var vertexDataBuffer = new VertexBuffer();
-            vertexDataBuffer.Create(gl);
-            vertexDataBuffer.Bind(gl);
-            vertexDataBuffer.SetData(gl, 0, vertices, false, 3);
-
-            var texCoordsBuffer = new VertexBuffer();
-            texCoordsBuffer.Create(gl);
-            texCoordsBuffer.Bind(gl);
-            texCoordsBuffer.SetData(gl, 1, texcoords, false, 2);
-            
-            //  Unbind the vertex array
-            vertexBufferArray.Unbind(gl);
-            texCoordsBufferArray.Unbind(gl);
-        }
-
     }
 }

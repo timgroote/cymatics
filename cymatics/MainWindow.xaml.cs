@@ -36,7 +36,9 @@ namespace cymatics
             LoadSyntaxHighlighting(HighlightingType.Tim);
             Editor.TextChanged += EditorOnTextChanged;
             Editor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+            _scene.Initialise(shaderControl);
             _scene.Compilation += _scene_Compilation;
+            
         }
 
         private void _scene_Compilation(object sender, EventArgs e)
@@ -73,7 +75,7 @@ namespace cymatics
                 };
                 timer.Tick += (s, args) =>
                 {
-                    Dispatcher.Invoke(() => { _scene.Initialise(_gl); });
+                    Dispatcher.Invoke(() => { _scene.Initialise(shaderControl); });
                     timer.Stop();
                 };
             }
@@ -133,18 +135,19 @@ namespace cymatics
             this.Close();
         }
 
-        private void OpenglControl_OnOpenGLDraw(object sender, OpenGLEventArgs args)
-        {
-            _scene.Draw(_gl, (float)OpenglControl.ActualWidth, (float)OpenglControl.ActualHeight);
-            FPSIndicator.Text = OpenglControl.FrameRate.ToString();
-        }
+//        private void OpenglControl_OnOpenGLDraw(object sender, OpenGLEventArgs args)
+//        {
+//            _scene.Draw(_gl, (float)OpenglControl.ActualWidth, (float)OpenglControl.ActualHeight);
+//            FPSIndicator.Text = OpenglControl.FrameRate.ToString();
+//        }
 
         private void OpenglControl_OnOpenGLInitialized(object sender, OpenGLEventArgs args)
         {
             _gl = args.OpenGL;
             try
             {
-                _scene.Initialise(_gl);
+                Debug.WriteLine("GL INIT");
+                _scene.Initialise(shaderControl);
             }
             catch(Exception ex)
             {
@@ -180,6 +183,22 @@ namespace cymatics
         private void Shaderbuilder_item_OnClick(object sender, RoutedEventArgs e)
         {
             LoadSyntaxHighlighting(HighlightingType.ShaderBuilder);
+        }
+        
+
+        private void Quarter_resolution_item_OnClick(object sender, RoutedEventArgs e)
+        {
+            _scene.resolutionMultiplier = 0.25f;
+        }
+
+        private void Half_resolution_item_OnClick(object sender, RoutedEventArgs e)
+        {
+            _scene.resolutionMultiplier = 0.5f;
+        }
+
+        private void Full_resolution_item_OnClick(object sender, RoutedEventArgs e)
+        {
+            _scene.resolutionMultiplier = 1.0f;
         }
     }
 }

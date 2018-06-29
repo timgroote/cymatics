@@ -55,6 +55,12 @@
     <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.9.0-preview1\lib\net35\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.0.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.GLControl.3.0.0\lib\net20\OpenTK.GLControl.dll</HintPath>
+    </Reference>
     <Reference Include="SharpGL, Version=2.4.0.0, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpGL.2.4.0.0\lib\net40\SharpGL.dll</HintPath>
     </Reference>
@@ -84,6 +90,24 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfGlslControl, Version=0.3.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfGlslControl.0.3.18\lib\net46\WpfGlslControl.dll</HintPath>
+    </Reference>
+    <Reference Include="WpfOpenGlControl, Version=0.3.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfOpenGlControl.0.3.18\lib\net46\WpfOpenGlControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenseless.Base, Version=0.5.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zenseless.Base.0.5.52\lib\net46\Zenseless.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenseless.Geometry, Version=0.5.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zenseless.Geometry.0.5.52\lib\net46\Zenseless.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenseless.HLGL, Version=0.5.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zenseless.HLGL.0.5.52\lib\net46\Zenseless.HLGL.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenseless.OpenGL, Version=0.5.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zenseless.OpenGL.0.5.52\lib\net46\Zenseless.OpenGL.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -92,9 +116,16 @@
     </ApplicationDefinition>
     <Compile Include="AudioBitmap.cs" />
     <Compile Include="BitmapUpdateEventArgs.cs" />
+    <Compile Include="Controls\GLSLControl.xaml.cs">
+      <DependentUpon>GLSLControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ImageUtilities.cs" />
     <Compile Include="NVidiaUtils.cs" />
     <Compile Include="ResourceHelper.cs" />
+    <Page Include="Controls\GLSLControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -137,6 +168,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Examples\starnest.frag" />
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -146,6 +178,7 @@
     <None Include="SBSyntaxHighlighting.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Shaders\infiniteglide.frag" />
     <None Include="SyntaxHighlighting.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

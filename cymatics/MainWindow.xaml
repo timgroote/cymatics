@@ -4,6 +4,8 @@
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
                       xmlns:wpf="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
+                      xmlns:wpfGlslControl="clr-namespace:WpfGlslControl;assembly=WpfGlslControl"
+                      xmlns:controls="clr-namespace:cymatics.Controls"
                       Title="MainWindow"
                       Height="600"
                       Width="800">
@@ -24,18 +26,20 @@
     </Controls:MetroWindow.Resources>
     
     <Grid Background="#222222">
-        <Grid.RowDefinitions>
+        <Grid.RowDefinitions> 
             <RowDefinition Height="Auto" ></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <avalonedit:TextEditor Grid.Row="1" Style="{StaticResource editorOpacity}" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
+        
         <Border x:Name="GLBorder" Grid.Row="1">
-            <wpf:OpenGLControl x:Name="OpenglControl" OpenGLDraw="OpenglControl_OnOpenGLDraw" OpenGLInitialized="OpenglControl_OnOpenGLInitialized" RenderContextType="FBO" DrawFPS="False" />
+            <controls:GLSLControl x:Name="shaderControl" ></controls:GLSLControl>
         </Border>
 
-        <avalonedit:TextEditor Grid.Row="1" Style="{StaticResource editorOpacity}" Foreground="WhiteSmoke" Name="Editor" FontFamily="Consolas" FontSize="11pt" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></avalonedit:TextEditor>
+        
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem x:Name="new_item" Header="_New" Click="new_Item_Click"></MenuItem>
@@ -46,9 +50,9 @@
             </MenuItem>
             <MenuItem Header="_Rendering">
                 <MenuItem x:Name="Resolution" Header="Reso_lution">
-                    <MenuItem x:Name="quarter_resolution_item" Header="_Quarter (1/4)"></MenuItem>
-                    <MenuItem x:Name="half_resolution_item" Header="_Half (1/2)"></MenuItem>
-                    <MenuItem x:Name="full_resolution_item" Header="_Full (1:1)"></MenuItem>
+                    <MenuItem x:Name="quarter_resolution_item" Header="_Quarter (1/4)" Click="Quarter_resolution_item_OnClick"></MenuItem>
+                    <MenuItem x:Name="half_resolution_item" Header="_Half (1/2)" Click="Half_resolution_item_OnClick"></MenuItem>
+                    <MenuItem x:Name="full_resolution_item" Header="_Full (1:1)" Click="Full_resolution_item_OnClick"></MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Code">
